@@ -1,0 +1,48 @@
+/* 给整个页面加个背景色 background-color: ; font-family: Arial, sans-serif;*/
+body {
+    background-color: #ddc5db;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;     /* 垂直居中 */
+    height: 100vh;           /* 占满屏幕高度 */
+    margin: 0;
+}
+
+/* 设计卡片样式 */
+.card {
+    background-color: white;
+    width: 300px;
+    padding: 30px;
+    border-radius: 15px;      /* 圆角 */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* 阴影 */
+    text-align: center;
+}
+
+/* 标题颜色 */
+h1 {
+    color: #333;
+}
+
+img {
+    width: 150px;
+    height: 150px;
+    border-radius: 5px; /* 圆形图片 */
+    margin-bottom: 20px;
+}
+
+/* 按钮样式 */
+button {
+    background-color: #006eff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s; /* 动画过渡 */
+}
+
+/* 鼠标悬停在按钮上的效果 */
+button:hover {
+    background-color: #122381;
+}
