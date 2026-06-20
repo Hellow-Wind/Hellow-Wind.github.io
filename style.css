@@ -28,7 +28,7 @@ img {
     width: 150px;
     height: 150px;
     border-radius: 5px; /* 圆形图片 */
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 /* 按钮样式 */
@@ -38,6 +38,7 @@ button {
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
+    margin-bottom: 20px;
     cursor: pointer;
     transition: background 0.3s; /* 动画过渡 */
 }
