@@ -19,13 +19,9 @@
     <p>个人博客正在搭建中...</p>
 </div>
 
-<!-- ===== 播放器 ===== -->
 <div class="player-bar">
-    <!-- 左侧：封面 + 歌名 + 控制按钮 -->
     <div class="player-left">
-        <div class="player-cover">
-            <img src="img/Bochi_img.jpg" alt="封面" id="coverImg">
-        </div>
+        <div class="player-cover"><img src="img/Bochi_img.jpg" alt="封面" id="coverImg"></div>
         <div class="player-info">
             <div class="player-song" id="songTitle">未加载</div>
             <div class="player-artist">ka2e</div>
@@ -36,8 +32,6 @@
             <button id="nextBtn" class="player-btn">⏭</button>
         </div>
     </div>
-
-    <!-- 中间：进度条 -->
     <div class="player-center">
         <div class="player-progress">
             <span id="currentTime">00:00</span>
@@ -45,8 +39,6 @@
             <span id="totalTime">00:00</span>
         </div>
     </div>
-
-    <!-- 右侧：循环 + 音量 + 歌单 -->
     <div class="player-right">
         <button id="repeatBtn" class="player-btn" style="color:#888; font-size:16px;">🔂</button>
         <span id="volumeIcon" class="volume-icon">🔊</span>
@@ -55,7 +47,6 @@
     </div>
 </div>
 
-<!-- 歌单面板 -->
 <div id="playlistPanel">
     <div class="playlist-header">播放列表</div>
     <ul id="playlistList"></ul>
@@ -63,5 +54,79 @@
 
 <audio id="audio"></audio>
 <script src="js/main.js"></script>
+
+<!-- 初音桌宠 -->
+<div id="miku-pet">
+  <div id="miku-sprite"></div>
+  <div id="miku-bubble"></div>
+  <div id="miku-zzz">Zzz</div>
+</div>
+
+<style>
+#miku-pet{position:fixed;right:20px;bottom:80px;width:150px;height:150px;cursor:grab;z-index:9999;user-select:none}
+#miku-pet:active{cursor:grabbing}
+#miku-sprite{width:100%;height:100%;background:url('img/spritesheet.png') no-repeat;background-size:800% 900%}
+#miku-bubble{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#fff;border:2px solid #6bc5c5;border-radius:10px;padding:6px 12px;font-size:14px;color:#333;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
+#miku-bubble.show{opacity:1}
+#miku-zzz{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:20px;font-weight:bold;color:#6bc5c5;opacity:0;pointer-events:none;text-shadow:0 0 4px #fff}
+#miku-zzz.show{opacity:1;animation:zzzFloat 2s ease-in-out infinite}
+@keyframes zzzFloat{0%{transform:translate(-50%,0) scale(.9);opacity:.4}50%{transform:translate(-50%,-15px) scale(1.1);opacity:1}100%{transform:translate(-50%,-30px) scale(.9);opacity:0}}
+</style>
+
+<script>
+const pet=document.getElementById('miku-pet'),sprite=document.getElementById('miku-sprite'),
+      bubble=document.getElementById('miku-bubble'),zzz=document.getElementById('miku-zzz');
+const anims={idle:[0,6],wave:[3,4],jump:[4,5]};
+let curAnim='idle',curFrame=0,animTimer=null,sleepTimer=null;
+const SLEEP_DELAY=30000;
+let dragging=false,startX,startY,startLeft,startTop;
+
+// 精灵图切割：8列9行
+const setSprite=(row,col)=>sprite.style.backgroundPosition=`${col*(100/7)}% ${row*(100/8)}%`;
+
+// 播放动画
+function play(name){
+  const [row,frames]=anims[name];curAnim=name;curFrame=0;
+  clearInterval(animTimer);
+  animTimer=setInterval(()=>{curFrame=(curFrame+1)%frames;setSprite(row,curFrame)},150);
+}
+// 睡觉 & 重置
+const goSleep=()=>{clearInterval(animTimer);setSprite(5,2);zzz.classList.add('show')};
+function resetSleep(){
+  clearTimeout(sleepTimer);zzz.classList.remove('show');play('idle');
+  sleepTimer=setTimeout(goSleep,SLEEP_DELAY);
+}
+// 拖动
+pet.addEventListener('mousedown',e=>{
+  dragging=true;startX=e.clientX;startY=e.clientY;
+  startLeft=pet.offsetLeft;startTop=pet.offsetTop;
+  clearInterval(animTimer);setSprite(5,7);clearTimeout(sleepTimer);zzz.classList.remove('show');
+});
+document.addEventListener('mousemove',e=>{
+  if(!dragging)return;
+  pet.style.left=startLeft+e.clientX-startX+'px';
+  pet.style.top=startTop+e.clientY-startY+'px';
+  pet.style.right='auto';pet.style.bottom='auto';
+});
+document.addEventListener('mouseup',()=>{if(dragging){dragging=false;resetSleep()}});
+// 交互
+pet.addEventListener('mouseenter',()=>{if(!dragging)resetSleep()});
+pet.addEventListener('click',()=>{
+  const next=['wave','jump'][Math.floor(Math.random()*2)];
+  play(next);setTimeout(()=>play('idle'),1500);
+  say(['你好呀～','在听歌吗？'][Math.floor(Math.random()*2)]);
+  resetSleep();
+});
+// 气泡
+function say(t){
+  bubble.textContent=t;bubble.classList.add('show');
+  clearTimeout(say.t);
+  say.t=setTimeout(()=>bubble.classList.remove('show'),3000);
+}
+// 启动
+play('idle');resetSleep();
+setInterval(()=>say('要不要休息一下？'),30000);
+</script>
+
 </body>
 </html>
